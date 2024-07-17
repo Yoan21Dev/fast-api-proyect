@@ -13,3 +13,12 @@ class User(Base):
     disabled = Column(Boolean)
     
 
+
+class Car(Base):
+    
+    __tablename__ = "car"
+    id = Column(int, primary_key=True,autoincrement=True)
+    name = Column(String)
+    model = Column(String)
+    
+
