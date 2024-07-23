@@ -9,3 +9,10 @@ class User(BaseModel):
 
 class UserInDB(User):
     hashed_password: str
+
+class CreateUser(BaseModel):
+    username: str
+    password: str
+    full_name: Union[str,None] = None
+    email: Union[str,None] = None
+    disabled: Union[bool,None] = None

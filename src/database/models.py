@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Boolean
+from sqlalchemy import Integer, create_engine, Column, String, Boolean
 from src.database.db import Base
 
 # Definición del modelo de datos
@@ -17,7 +17,7 @@ class User(Base):
 class Car(Base):
     
     __tablename__ = "car"
-    id = Column(int, primary_key=True,autoincrement=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     name = Column(String)
     model = Column(String)
     
