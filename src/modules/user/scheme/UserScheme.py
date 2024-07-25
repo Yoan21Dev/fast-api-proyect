@@ -10,7 +10,7 @@ class User(BaseModel):
 class UserInDB(User):
     hashed_password: str
 
-class CreateUser(BaseModel):
+class CreateUser(User):
     username: str
     password: str
     full_name: Union[str,None] = None
