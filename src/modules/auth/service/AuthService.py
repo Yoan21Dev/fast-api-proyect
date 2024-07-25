@@ -92,4 +92,3 @@ def get_user_disabled_current(user: User = Depends(get_user_current)):
     if user.disabled:
         raise HTTPException(status_code=400, detail="Inactive User", headers={"www-Authenticate0":"Bearer"})
     return user
-    
