@@ -118,23 +118,17 @@
               </p>
             </div>
             <!-- Botón de Comprar -->
-        <!-- Botón de Comprar -->
-        <div class="mt-4 flex justify-center">
-          {% if user.id == car.sell_to_user_id %}
-          <p class="text-green-500 font-bold">Este coche te pertenece</p>
-          {% else %}
-          <button
-            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onclick="buyCar('{{ car.id }}')"
-          >
-            Comprar
-          </button>
-          {% endif %}
-
+            <div class="mt-4 flex justify-center">
+              <button
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                onclick="buyCar('{{ car.id }}')"
+              >
+                Comprar
+              </button>
             </div>
           </div>
           {% endfor %}
-        </div>
+        </div> 
     </main>
 
     <!-- Modal -->
@@ -319,6 +313,7 @@
       openModalBtn.addEventListener("click", () => {
         modalOverlay.style.display = "flex";
         modal.style.display = "block";
+ 
       });
 
       closeModalBtn.addEventListener("click", () => {
@@ -355,6 +350,27 @@
           console.error('Error:', error);
           alert('Error al enviar la solicitud');
         }
+      }
+
+      const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("access_token="))
+      .split("=")[1];
+
+      async function userMe() {
+              // Realizar una solicitud para obtener el user.id
+              const userResponse = await fetch('http://localhost:8000/users/me', {
+                method: 'GET',
+                headers: {
+                  'accept': 'application/json',
+                  'Authorization': `Bearer ${token}`
+                }
+              });
+        
+              if (!userResponse.ok) {
+                throw new Error('Error al obtener el usuario');
+              }
+              return console.log(userResponse)
       }
 
       // Close modal if clicking outside of the modal
