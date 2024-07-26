@@ -4,9 +4,17 @@ from src.modules.user.controller.UserController import userRouter
 from src.modules.views.controller.ViewController import viewRouter
 from src.database.db import create_db_and_tables
 import uvicorn
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 app.include_router(authRouter,tags=['Authentication route'])
 app.include_router(userRouter,tags=['Users route'])
 app.include_router(viewRouter,tags=['View'])

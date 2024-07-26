@@ -3,14 +3,215 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard</title>
+  <title>Dashboard de Carros</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    .navbar {
+      transition: all 0.3s ease;
+    }
+    .navbar.scrolled {
+      background-color: #1f2937; /* Dark gray */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      justify-content: center;
+      align-items: center;
+      z-index: 50;
+    }
+    .modal {
+      display: none;
+      background: white;
+      padding: 2rem;
+      border-radius: 0.5rem;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center h-screen">
-  <div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-lg">
-    <h2 class="text-2xl font-bold mb-6 text-center">Bienvenido al Dashboard</h2>
-    <p class="text-gray-700">Has iniciado sesión exitosamente.</p>
-    <p class="text-gray-700 mt-4">Tu token de acceso es: {{ token }}</p>
+<body class="bg-gray-100">
+  <!-- Navbar -->
+  <nav id="navbar" class="navbar fixed w-full bg-white shadow-md z-10">
+    <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+      <a href="#" class="text-2xl font-bold text-gray-900">CarrosApp</a>
+      <div class="space-x-4">
+        <a href="#" class="text-gray-700 hover:text-gray-900">Inicio</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">Dashboard</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">Perfil</a>
+        <a href="#" class="text-gray-700 hover:text-gray-900">Cerrar Sesión</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main class="pt-20">
+    <div class="container mx-auto p-6">
+      <div class="flex justify-between items-center mb-6">
+        <h2 class="text-3xl font-bold text-center text-gray-800 flex items-center justify-center space-x-2">
+          <i class="fas fa-car text-blue-500 text-2xl"></i>
+          <span>Dashboard de Carros</span>
+        </h2>
+        <button id="openModalBtn" class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition-shadow duration-300 flex items-center space-x-2">
+          <i class="fas fa-plus-circle text-lg"></i>
+          <span>Vender Vehículo</span>
+        </button>
+      </div>
+
+      <!-- Car Cards -->
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <!-- Repeat for each car -->
+        {% for car in cars %}
+        <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col">
+          <div class="flex items-center space-x-4 mb-4">
+            <i class="fas fa-car text-blue-500 text-4xl"></i>
+            <div>
+              <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ car.name }}</h3>
+              <p class="text-gray-700"><strong>Modelo:</strong> <span class="font-medium">{{ car.model }}</span></p>
+              <p class="text-gray-700"><strong>Marca:</strong> <span class="font-medium">{{ car.mark }}</span></p>
+            </div>
+          </div>
+          <div class="mt-2">
+            <p class="text-gray-700"><strong>Año:</strong> <span class="font-medium">{{ car.year }}</span></p>
+            <p class="text-gray-700"><strong>Precio:</strong> <span class="font-medium">${{ car.prize }}</span></p>
+            <p class="text-gray-700"><strong>Color:</strong> <span class="font-medium">{{ car.color }}</span></p>
+            <p class="text-gray-700"><strong>Estado:</strong> <span class="font-medium">{{ car.state }}</span></p>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal -->
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+      <button id="closeModalBtn" class="absolute top-4 right-4 text-gray-500 hover:text-gray-900">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+      <h3 class="text-xl font-semibold mb-4">Formulario de Venta de Vehículo</h3>
+      <form id="create-car-form" action="/create-car" method="post">
+        <div class="mb-4">
+          <label for="car_name" class="block text-gray-700 text-sm font-bold mb-2">Nombre del Vehículo</label>
+          <input type="text" id="name" name="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-4">
+          <label for="model" class="block text-gray-700 text-sm font-bold mb-2">Modelo</label>
+          <input type="text" id="model" name="model" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-4">
+          <label for="mark" class="block text-gray-700 text-sm font-bold mb-2">Marca</label>
+          <input type="text" id="mark" name="mark" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-4">
+          <label for="year" class="block text-gray-700 text-sm font-bold mb-2">Año</label>
+          <input type="number" id="year" name="year" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-4">
+          <label for="price" class="block text-gray-700 text-sm font-bold mb-2">Precio</label>
+          <input type="number" id="price" name="price" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-4">
+          <label for="color" class="block text-gray-700 text-sm font-bold mb-2">Color</label>
+          <input type="text" id="color" name="color" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <div class="mb-4">
+          <label for="state" class="block text-gray-700 text-sm font-bold mb-2">Estado</label>
+          <input type="text" id="state" name="state" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+        </div>
+        <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">Vender Vehículo</button>
+      </form>
+    </div>
   </div>
+
+  <script>
+
+
+    document.getElementById('create-car-form').addEventListener('submit', async function(event) {
+        event.preventDefault(); // Prevenir el envío del formulario por defecto
+    
+        const form = event.target;
+        const formData = new FormData(form);
+        
+        // Crear un objeto con los datos del formulario
+        const carData = {
+            name: formData.get('name'),
+            model: formData.get('model'),
+            mark: formData.get('mark'),
+            year: formData.get('year'),
+            price: formData.get('price'),
+            color: formData.get('color'),
+            state: formData.get('state'),
+        };
+    
+        // Obtener el token de las cookies
+        const token = document.cookie.split('; ').find(row => row.startsWith('access_token=')).split('=')[1];
+    
+        // Enviar la solicitud POST usando fetch
+        try {
+            const response = await fetch('/create-car', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(carData)
+            });
+    
+            if (response.ok) {
+                const result = await response.json();
+                alert('Vehicle successfully created!');
+                // Redirigir o actualizar la página si es necesario
+            } else {
+                const error = await response.json();
+                alert(`Error: ${error.detail}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while creating the vehicle.');
+        }
+    });
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+      const navbar = document.getElementById('navbar');
+      if (window.scrollY > 50) {
+        navbar.classList.add('scrolled');
+      } else {
+        navbar.classList.remove('scrolled');
+      }
+    });
+
+    // Modal functionality
+    const openModalBtn = document.getElementById('openModalBtn');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modal = document.querySelector('.modal');
+
+    openModalBtn.addEventListener('click', () => {
+      modalOverlay.style.display = 'flex';
+      modal.style.display = 'block';
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+      modalOverlay.style.display = 'none';
+      modal.style.display = 'none';
+    });
+
+    // Close modal if clicking outside of the modal
+    window.addEventListener('click', (event) => {
+      if (event.target === modalOverlay) {
+        modalOverlay.style.display = 'none';
+        modal.style.display = 'none';
+      }
+    });
+  </script>
 </body>
 </html>

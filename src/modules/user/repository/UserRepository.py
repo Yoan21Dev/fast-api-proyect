@@ -22,7 +22,7 @@ class UserRepository():
 
     async def create_user(self, user_data):
         hashed_password = self.hash_password(user_data.password)  # No usar await aquí.
-        user = User(username= user_data.username, hashed_password=hashed_password,email=user_data.email,disabled=False )
+        user = User(username= user_data.username, hashed_password=hashed_password,email=user_data.email,disabled=False, full_name=user_data.full_name )
         async with self.session() as session:
               session.add(user)
               await session.commit()

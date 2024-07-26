@@ -13,7 +13,6 @@ userService = UserService()
 def user(user: User = Depends(get_user_disabled_current)):
     return user
 
-
 @userRouter.get("/users")
 async def users():
     return await userService.get_all_user()

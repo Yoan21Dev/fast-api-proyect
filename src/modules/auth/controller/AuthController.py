@@ -24,17 +24,12 @@ async def login(form_data:OAuth2PasswordRequestForm = Depends()):
 # Ruta de autenticación
 @authRouter.post("/auth-login-view")
 async def loginView(request: Request, form_data: OAuth2PasswordRequestForm = Depends()):
-    users_db = await get_users_db()
-    user = authenticate_user(users_db, form_data.username, form_data.password)
     
-    if not user:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
     
-    access_token_expire = timedelta(minutes=30)
-    access_token_jwt = create_token({"sub": user.username}, access_token_expire)
+    accessTokenData = await login(form_data) 
     
     response = RedirectResponse(url="/dashboard", status_code=302)
-    response.set_cookie(key="access_token", value=access_token_jwt, httponly=True)
-    
+    response.headers["Authorization"] = f"Bearer {accessTokenData['access_token']}"
+    response.headers["token_type"] = "bearer"
+    print(response.headers)
     return response
-

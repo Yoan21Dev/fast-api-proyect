@@ -36,6 +36,7 @@ userService = UserService()
 async def get_users_db():
     users = await userService.get_all_user()
     return {user.username: {
+                "id": user.id,
                 "username": user.username,
                 "full_name": user.full_name,
                 "email": user.email,
@@ -91,4 +92,22 @@ async def get_user_current(token: str = Depends(oauth2_scheme)):
 def get_user_disabled_current(user: User = Depends(get_user_current)):
     if user.disabled:
         raise HTTPException(status_code=400, detail="Inactive User", headers={"www-Authenticate0":"Bearer"})
+    return user
+
+
+async def get_user_current_view(token: str ):
+    try:
+        token_decode = jwt.decode(token, key=SECRET_KEY, algorithms=[ALGORITHM]) 
+        username = token_decode.get("sub")
+        if username == None:
+            raise HTTPException(status_code=401, detail="could not validate crendentials", headers={"www-Authenticate0":"Bearer"})
+    
+    except JWTError as e :
+        raise HTTPException(status_code=401, detail="could not validate crendentials", headers={"www-Authenticate0":"Bearer"})
+    users_db = await get_users_db()
+
+    user = get_user(users_db, username)
+    
+    if not user:
+        raise HTTPException(status_code=401, detail="could not validate crendentials", headers={"www-Authenticate0":"Bearer"})
     return user
