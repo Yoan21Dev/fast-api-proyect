@@ -10,3 +10,4 @@ class CarCreate(BaseModel):
     price: float
     color: str
     state: str
+    created_by_user_id: int

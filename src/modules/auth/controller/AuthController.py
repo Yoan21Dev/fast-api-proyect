@@ -31,5 +31,5 @@ async def loginView(request: Request, form_data: OAuth2PasswordRequestForm = Dep
     response = RedirectResponse(url="/dashboard", status_code=302)
     response.headers["Authorization"] = f"Bearer {accessTokenData['access_token']}"
     response.headers["token_type"] = "bearer"
-    print(response.headers)
+    response.set_cookie("access_token",f'{accessTokenData['access_token']}')
     return response

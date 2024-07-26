@@ -25,7 +25,7 @@ class Car(Base):
     mark = Column(String)
     state = Column(String)
     year = Column(Integer)
-    prize = Column(Float)
+    price = Column(Float)
     color = Column(String)
     
     # Foreign key for the user who created the car

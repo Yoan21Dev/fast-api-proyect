@@ -69,19 +69,42 @@ async def create_car(request: Request,
     user: User = Depends(get_user_current)
     ):
     
-    print(user)
+    car_data = CarCreate(
+        name=name,
+        model=model,
+        mark=mark,
+        year=year,
+        price=price,
+        color=color,
+        state=state,
+        created_by_user_id=user.id
+        )
+    await carService.create_car(car_data)
 
 
 # Ruta de dashboard (nueva plantilla)
 @viewRouter.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request):
     
-    
     token: Optional[str] = request.cookies.get("access_token")
-
 
     if not token:
         return RedirectResponse(url="/", status_code=302)
     cars = await carService.get_all_cars()
     context = {"request": request, "token": token, 'cars': cars}
     return templates.TemplateResponse("dashboard.html", context)
+
+@viewRouter.post("/buy-car")
+async def buy_car(request: Request, user: User = Depends(get_user_current)):
+    data = await request.json()
+    car_id = data.get("car_id")
+    
+    if not car_id:
+        raise HTTPException(status_code=400, detail="Car ID is required")
+    
+    success = await carService.buy_car(user_id=user.id, car_id=int (car_id))
+    
+    if success:
+        return JSONResponse(content={"message": "Compra realizada con éxito"})
+    else:
+        raise HTTPException(status_code=500, detail="Error al realizar la compra")
