@@ -16,15 +16,12 @@ viewRouter = APIRouter()
 templates = Jinja2Templates(directory="src\\modules\\views\\templates")
 userService = UserService()
 carService = CarService()
-tokeG  = ''
-# Ruta para la vista web
+
 @viewRouter.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
     context = {"request": request, "message": "Hola desde FastAPI!"}
     print(request)
     return templates.TemplateResponse("index.html", context)
-
-
 
 @viewRouter.get("/register", response_class=HTMLResponse)
 async def register(request: Request):
@@ -54,8 +51,6 @@ async def register_user(request: Request, username: str = Form(...), confirm_pas
     print("Created user:", user)
     
     return RedirectResponse(url="/", status_code=302)
-
-
 
 @viewRouter.post('/create-car')
 async def create_car(request: Request,

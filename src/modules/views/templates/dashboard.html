@@ -118,13 +118,19 @@
               </p>
             </div>
             <!-- Botón de Comprar -->
-            <div class="mt-4 flex justify-center">
-              <button
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onclick="buyCar('{{ car.id }}')"
-              >
-                Comprar
-              </button>
+        <!-- Botón de Comprar -->
+        <div class="mt-4 flex justify-center">
+          {% if user.id == car.sell_to_user_id %}
+          <p class="text-green-500 font-bold">Este coche te pertenece</p>
+          {% else %}
+          <button
+            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onclick="buyCar('{{ car.id }}')"
+          >
+            Comprar
+          </button>
+          {% endif %}
+
             </div>
           </div>
           {% endfor %}
