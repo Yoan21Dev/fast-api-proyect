@@ -41,7 +41,8 @@ async def get_users_db():
                 "full_name": user.full_name,
                 "email": user.email,
                 "hashed_password": user.hashed_password,
-                "disabled": user.disabled
+                "disabled": user.disabled,
+                "phone": user.phone
             } for user in users}
 
 

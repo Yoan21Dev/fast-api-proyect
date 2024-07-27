@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Union
+from typing import Union,Any
 
 class User(BaseModel):
     id: int
@@ -7,6 +7,8 @@ class User(BaseModel):
     full_name: Union[str,None] = None
     email: Union[str,None] = None
     disabled: Union[bool,None] = None
+    phone: Union[str,None] = None
+
     class Config:
         from_attributes = True
 class UserInDB(User):

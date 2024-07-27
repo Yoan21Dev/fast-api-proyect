@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Detail</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-100 text-gray-800 flex items-center justify-center h-screen">
+    <div class="bg-white rounded-xl shadow-md overflow-hidden max-w-4xl w-full p-8">
+        <div class="md:flex">
+            <div class="md:flex-shrink-0 flex items-center justify-center bg-gray-200 p-8">
+                <i class="fas fa-user fa-7x text-gray-400"></i>
+            </div>
+            <div class="md:flex-grow p-8 flex flex-col justify-center">
+                <div class="uppercase tracking-wide text-sm text-indigo-500 font-semibold">Username: {{ user.username }}</div>
+                <h1 class="block mt-1 text-2xl leading-tight font-medium text-black">Full Name: {{ user.full_name }}</h1>
+                <p class="mt-2 text-gray-500">Email: {{ user.email }}</p>
+                <p class="mt-2 text-gray-500">Phone: {{ user.phone }}</p>
+            </div>
+        </div>
+        <!-- Botón de salida -->
+        <div class="flex justify-center mt-8">
+            <a href="/dashboard" class="bg-blue-500 hover:bg-blue-700 text-white fosnt-bold py-2 px-4 rounded">
+                Volver al Dashboard
+            </a>
+        </div>
+    </div>
+</body>
+</html>

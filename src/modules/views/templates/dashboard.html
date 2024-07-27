@@ -53,7 +53,7 @@
         <div class="space-x-4">
           <a href="#" class="text-gray-700 hover:text-gray-900">Inicio</a>
           <a href="#" class="text-gray-700 hover:text-gray-900">Dashboard</a>
-          <a href="#" class="text-gray-700 hover:text-gray-900">Perfil</a>
+          <a href="#" id="perfilLink" class="text-gray-700 hover:text-gray-900">Perfil</a>
           <a href="#" class="text-gray-700 hover:text-gray-900"
             >Cerrar Sesión</a
           >
@@ -88,7 +88,7 @@
             <div class="flex items-center space-x-4 mb-4">
               <i class="fas fa-car text-blue-500 text-4xl"></i>
               <div>
-                <h3 class="text-xl font-semibold text-gray-900 mb-2">{{ car.name }}</h3>
+                <h3 class="text-xl  font-semibold text-gray-900 mb-2">{{ car.name }}</h3>
                 <p class="text-gray-700">
                   <strong>Modelo:</strong>
                   <span class="font-medium">{{ car.model }}</span>
@@ -99,10 +99,11 @@
                 </p>
               </div>
             </div>
-            <div class="mt-2">
+            <div class="mt-2 text-center">
+              <p class=" text-gray-700 font-medium font-semibold ">Detalles</p>
               <p class="text-gray-700">
                 <strong>Año:</strong>
-                <span class="font-medium">{{ car.year }}</span>
+                <span class="font-medium  text-gray-700 ">{{ car.year }}</span>
               </p>
               <p class="text-gray-700">
                 <strong>Precio:</strong>
@@ -116,16 +117,29 @@
                 <strong>Estado:</strong>
                 <span class="font-medium">{{ car.state }}</span>
               </p>
+
+              
             </div>
             <!-- Botón de Comprar -->
+            {% if not car.sell_to_user_id %}
             <div class="mt-4 flex justify-center">
-              <button
-                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-                onclick="buyCar('{{ car.id }}')"
-              >
-                Comprar
-              </button>
+                <button
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    onclick="buyCar('{{ car.id }}')"
+                >
+                    Comprar
+                </button>
             </div>
+            {% else %}
+            <div class="mt-4 flex justify-center">
+                <button
+                    class="bg-red-500 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+                    disabled
+                >
+                    Vendido
+                </button>
+            </div>
+            {% endif %}
           </div>
           {% endfor %}
         </div> 
@@ -380,6 +394,48 @@
           modal.style.display = "none";
         }
       });
+
+
+
+            // Función para obtener el token del almacenamiento local o cookies
+            function getToken() {
+              // Aquí puedes implementar la lógica para obtener el token
+              // Ejemplo: desde cookies
+              const token = document.cookie.split('; ').find(row => row.startsWith('access_token='));
+              return token ? token.split('=')[1] : null;
+            }
+      
+            // Manejar el clic en el enlace "Perfil"
+            document.getElementById('perfilLink').addEventListener('click', async (event) => {
+              event.preventDefault(); // Evitar el comportamiento predeterminado del enlace
+      
+              const token = getToken();
+              if (token) {
+                try {
+                  const response = await fetch('/user-perfil', {
+                    headers: {
+                      'accept': 'application/json',
+                      'Authorization': `Bearer ${token}`,
+                    }
+                  });
+      
+                  if (response.ok) {
+                    const data = await response.text();
+                    // Actualizar la ventana actual con el contenido recibido
+                    document.open();
+                    document.write(data);
+                    document.close();
+                  } else {
+                    alert('Error al cargar el perfil.');
+                  }
+                } catch (error) {
+                  console.error('Error:', error);
+                  alert('Error al enviar la solicitud.');
+                }
+              } else {
+                alert('No se encontró el token de autenticación.');
+              }
+            });
     </script>
   </body>
 </html>

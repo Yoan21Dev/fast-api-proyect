@@ -9,6 +9,7 @@ from src.modules.cars.scheme.SchemeCar import CarCreate
 from src.modules.user.service.UserService import UserService
 from src.modules.user.scheme.UserScheme import CreateUser,User
 from src.modules.cars.service.CarService import CarService
+from src.database.models import User as UserMaster
 from src.modules.auth.service.AuthService import get_user_current, get_user_disabled_current
 
 viewRouter = APIRouter()
@@ -20,7 +21,6 @@ carService = CarService()
 @viewRouter.get("/", response_class=HTMLResponse)
 async def read_item(request: Request):
     context = {"request": request, "message": "Hola desde FastAPI!"}
-    print(request)
     return templates.TemplateResponse("index.html", context)
 
 @viewRouter.get("/register", response_class=HTMLResponse)
@@ -89,8 +89,13 @@ async def dashboard(request: Request):
     context = {"request": request, "token": token, 'cars': cars}
     return templates.TemplateResponse("dashboard.html", context)
 
+@viewRouter.get("/user-perfil", response_class=HTMLResponse)
+async def perfil(request:Request,  user: User = Depends(get_user_current)):
+    
+    return  templates.TemplateResponse("perfil.html", {"request": request, "user": user})
+
 @viewRouter.post("/buy-car")
-async def buy_car(request: Request, user: User = Depends(get_user_current)):
+async def buy_car(request: Request, user: UserMaster = Depends(get_user_current)):
     data = await request.json()
     car_id = data.get("car_id")
     

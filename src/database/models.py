@@ -27,10 +27,9 @@ class Car(Base):
     year = Column(Integer)
     price = Column(Float)
     color = Column(String)
-    
-    # Foreign key for the user who created the car
+
     created_by_user_id = Column(Integer, ForeignKey('users.id'))
-    # Foreign key for the user who bought the car
+
     sell_to_user_id = Column(Integer, ForeignKey('users.id'))
     
     # Relationships
