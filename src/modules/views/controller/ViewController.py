@@ -14,7 +14,7 @@ from src.modules.auth.service.AuthService import get_user_current, get_user_disa
 
 viewRouter = APIRouter()
 # Configurar Jinja2 para manejar las plantillas HTML
-templates = Jinja2Templates(directory="src\\modules\\views\\templates")
+templates = Jinja2Templates(directory="src/modules/views/templates")
 userService = UserService()
 carService = CarService()
 
